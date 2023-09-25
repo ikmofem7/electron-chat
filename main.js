@@ -1,5 +1,5 @@
 // Main Process
-const { BrowserWindow, app } = require("electron");
+const { BrowserWindow, app, Notification } = require("electron");
 
 console.log("Hello World");
 function createWindow() {
@@ -9,7 +9,12 @@ function createWindow() {
     height: 600,
     backgroundColor: "white",
     webPreferences: {
-      nodeIntegration: true,
+      nodeIntegration: false,
+      // will sanitize the code
+      worldSafeExecuteJavaScript: true,
+      // is a feature that ensures that both, your preload scripts and electon
+      // internal logic run in seperate context
+      contextIsolation: true,
     },
   });
   win.loadFile("index.html");
@@ -18,6 +23,11 @@ function createWindow() {
 
 app.whenReady().then(() => {
   createWindow();
+  const notification = new Notification({
+    title: "Hello World",
+    body: "My test message",
+  });
+  notification.show();
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
