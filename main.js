@@ -1,6 +1,7 @@
 // Main Process
-const { BrowserWindow, app, Notification } = require("electron");
-
+const { BrowserWindow, app, Notification, ipcMain } = require("electron");
+const isDev = !app.isPackaged;
+const path = require("path");
 console.log("Hello World");
 function createWindow() {
   // Renderer Process
@@ -9,17 +10,27 @@ function createWindow() {
     height: 600,
     backgroundColor: "white",
     webPreferences: {
-      nodeIntegration: false,
+      nodeIntegration: true,
       // will sanitize the code
-      worldSafeExecuteJavaScript: true,
+      // worldSafeExecuteJavaScript: true,
       // is a feature that ensures that both, your preload scripts and electon
       // internal logic run in seperate context
-      contextIsolation: true,
+      // contextIsolation: true,
     },
   });
   win.loadFile("index.html");
-  win.webContents.openDevTools();
+  isDev && win.webContents.openDevTools();
 }
+
+if (isDev) {
+  require("electron-reload")(__dirname, {
+    electron: path.join(__dirname, "node_modules", ".bin", "electron"),
+  });
+}
+
+ipcMain.on("notify", (_, body) => {
+  new Notification({ title: "Notification", body }).show();
+});
 
 app.whenReady().then(() => {
   createWindow();
