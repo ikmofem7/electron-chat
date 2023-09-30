@@ -12,10 +12,11 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true,
       // will sanitize the code
-      // worldSafeExecuteJavaScript: true,
+      worldSafeExecuteJavaScript: true,
       // is a feature that ensures that both, your preload scripts and electon
       // internal logic run in seperate context
-      // contextIsolation: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, "preload.js"),
     },
   });
   win.loadFile("index.html");
