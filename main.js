@@ -1,5 +1,7 @@
 // Main Process
 const { BrowserWindow, app, Notification, ipcMain } = require("electron");
+require("dotenv").config();
+
 const isDev = !app.isPackaged;
 const path = require("path");
 console.log("Hello World");
